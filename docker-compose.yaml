@@ -19,6 +19,7 @@ services:
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=external
       - --entrypoints.web.address=:80
+      - --ping=true
     ports:
       - "${TAILSCALE_IP}:80:80"
     volumes:
@@ -29,6 +30,8 @@ services:
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.services.traefik.loadbalancer.server.port=80"
+    healthcheck:
+      test: [ "CMD", "traefik", "healthcheck", "--ping" ]
 
   pihole:
     # https://docs.pi-hole.net/docker/
@@ -86,3 +89,6 @@ services:
       - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)"
       - "traefik.http.routers.whoami.entrypoints=web"
       - "traefik.http.services.whoami.loadbalancer.server.port=80"
+
+include:
+  - util-compose.yaml
