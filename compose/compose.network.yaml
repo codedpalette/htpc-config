@@ -40,6 +40,8 @@ services:
       FTLCONF_dns_listeningMode: "ALL"
       # Needed here because Tailscale's MagicDNS doesn't work with subdomains, so "service.${DOMAIN}" won't resolve
       FTLCONF_misc_dnsmasq_lines: "address=/${DOMAIN}/${TAILSCALE_IP}"
+      FTLCONF_webserver_domain: 'pihole.${DOMAIN}'
+      FTLCONF_webserver_session_timeout: 604800 # 1 week
     ports:
       # DNS Ports
       - "53:53/tcp"
@@ -62,7 +64,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"
       - "traefik.http.routers.pihole.entrypoints=web"
-      - "traefik.http.services.pihole.loadbalancer.server.port=80"
+      - "traefik.http.routers.pihole.middlewares=pihole-redirect"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https?://[^/]+/?$$"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://pihole.${DOMAIN}/admin/"
-      - "traefik.http.routers.pihole.middlewares=pihole-redirect"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
