@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     network_mode: none
     env_file:
-      - ./env/shared.env
-      - ./env/autoheal.env      
+      - ${ROOT_DIR}/env/shared.env
+      - ${ROOT_DIR}/env/autoheal.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

@@ -3,5 +3,3 @@ downloads
 secrets
 config.bak
 config
-# Owned by root, can't read
-#config/pihole/logrotate 
