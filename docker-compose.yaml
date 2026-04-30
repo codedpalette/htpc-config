@@ -6,17 +6,6 @@ secrets:
   pihole_password:
     file: ${ROOT_DIR}/secrets/pihole_password.txt
 
-services:
-  whoami:
-    image: traefik/whoami
-    container_name: whoami
-    restart: unless-stopped
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)"
-      - "traefik.http.routers.whoami.entrypoints=web"
-      - "traefik.http.services.whoami.loadbalancer.server.port=80"
-
 include:
   - compose/compose.network.yaml
   - compose/compose.util.yaml
