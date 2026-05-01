@@ -42,6 +42,7 @@ services:
       FTLCONF_misc_dnsmasq_lines: "address=/${DOMAIN}/${TAILSCALE_IP}"
       FTLCONF_webserver_domain: 'pihole.${DOMAIN}'
       FTLCONF_webserver_session_timeout: 604800 # 1 week
+      FTLCONF_dns_hosts: "${TAILNET_HOSTS}"
     ports:
       # DNS Ports
       - "53:53/tcp"

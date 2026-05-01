@@ -17,9 +17,14 @@ if [[ -z "$TAILSCALE_IP" ]]; then
 fi
 export TAILSCALE_IP
 
+# Get hostnames of all Tailscale devices, for Pi-hole clients resolution
+TAILNET_HOSTS="$(tailscale status | awk 'NF >= 2 && $1 ~ /^[0-9]+\./ { print $1, $2 }' | paste -sd ';' -)"
+export TAILNET_HOSTS
+
 echo "ROOT_DIR=$ROOT_DIR"
 echo "DOMAIN=$DOMAIN"
 echo "TAILSCALE_IP=$TAILSCALE_IP"
-
+echo "TAILNET_HOSTS=$TAILNET_HOSTS"
+  
 cd "$ROOT_DIR"
 docker compose up -d "$@"
