@@ -1,4 +1,12 @@
-# Raspberry Pi OS installation
+# Home server setup instructions
+
+> [!NOTE]
+> Currently, Pi is configured as the only DNS server on the tailnet. This is to ensure DNS queries on all my devices go through Pi-hole for ad/tracker blocking. The downside is that if Pi is down, there is no internet connection. This can be mitigated by setting up another Pi-hole instance on a different device.
+>
+> DHCP settings on the home router set Pi as Primary DNS and Cloudflare as Secondary DNS. This guarantees internet connectivity on home network if the Pi is down. However, in theory, some queries might slip through Pi to Cloudflare. While testing on my Macbook, I observed queries going to the Pi first, and reaching Cloudflare only if the Pi is down. Unfortunately, this can't be guaranteed on all OSes. In the future, if Pi proves it's stability, or doesn't depend on flaky SD card health, Cloudflare fallback can be removed from router settings. 
+
+## Raspberry Pi OS installation
+
 - Install [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
 - Choose Raspberry Pi OS Lite (64 bit)
 - Set ssh key. The private key is stored in Bitwarden Vault, and public key can be generated with the following command
@@ -8,7 +16,7 @@ ssh-keygen -f ~/.ssh/id_rpi -y > ~/.ssh/id_rpi.pub
 - Disable telemetry
 - Flash the microSD card
 
-# SSH config
+## SSH config
 - Add the following lines to `~/.ssh/config` (assuming Pi hostname is `server`)
 ```
 Host server
@@ -22,7 +30,7 @@ ssh htpc
 ```
 - Password authentication disabled by default (publickey only) by `/etc/ssh/sshd_config.d/50-cloud-init.conf`
 
-# ArgonOne case
+## ArgonOne case
 - Install case fan script
 ```bash
 curl https://download.argon40.com/argon1.sh | bash
@@ -36,7 +44,7 @@ argon-config
 systemctl status argon*
 ```
 
-# SD card durability
+## SD card durability
 
 ### Mount HDD
 - Get `PARTUUID` from HDD
@@ -81,7 +89,7 @@ ls -la /var/run /var/lock # should still be symlinks
 ### Configure swap
 > Use [rpi-swap](https://github.com/raspberrypi/rpi-swap). For now leave everything as default, since swap file in `/var/swap` is relocated to HDD
 
-# Networking
+## Networking
 - Confirm NetworkManager is running
 ```bash
 systemctl is-active NetworkManager # Should output: active
@@ -165,7 +173,7 @@ ip route show default # eth0 should have lower metric
 sudo touch /etc/cloud/cloud-init.disabled
 ```
 
-# Tailscale
+## Tailscale
 - Install [Tailscale](https://tailscale.com/)
 ```bash
 curl -fsSL https://tailscale.com/install.sh | sh
@@ -194,7 +202,7 @@ Host server server.local 192.168.1.100
 tailscale ip -4
 ```
 
-# Docker install
+## Docker install
 > [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 - Set up Docker's `apt` repository
 ```bash
@@ -276,3 +284,5 @@ cd ~/htpc
 chmod +x up.sh
 ./up.sh
 ```
+
+For verifying that pi-hole is working, refer to the [connectivity test plan](/conectivity_test.md)
