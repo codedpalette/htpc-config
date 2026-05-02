@@ -99,15 +99,6 @@ services:
       - "32414:32414/udp"
     restart: unless-stopped
     logging: *common-log
-  watchtower:
-    image: containrrr/watchtower
-    container_name: watchtower
-    environment: *common-env
-    command: --schedule "0 0 3 * * *" --cleanup
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
-    logging: *common-log
   portainer:
     image: portainer/portainer-ce:2.31.0
     container_name: portainer

@@ -1,11 +1,20 @@
 services:
   autoheal:
-    image: willfarrell/autoheal:latest
+    image: willfarrell/autoheal
     container_name: autoheal
     restart: unless-stopped
     network_mode: none
     env_file:
       - ${ROOT_DIR}/env/shared.env
       - ${ROOT_DIR}/env/autoheal.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  watchtower:
+    image: nickfedor/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+      - ${ROOT_DIR}/env/watchtower.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

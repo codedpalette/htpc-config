@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:latest
+    image: traefik:v3
     container_name: traefik
     restart: unless-stopped
     env_file:
@@ -25,7 +25,7 @@ services:
       test: [ "CMD", "traefik", "healthcheck", "--ping" ]
   pihole:
     # https://docs.pi-hole.net/docker/
-    image: pihole/pihole:latest
+    image: pihole/pihole
     container_name: pihole
     hostname: server # For display in UI
     restart: unless-stopped
@@ -43,10 +43,10 @@ services:
       FTLCONF_webserver_domain: 'pihole.${DOMAIN}'
       FTLCONF_webserver_session_timeout: 604800 # 1 week
       # For displaying tailscale hostnames in the Pi-hole dashboard
-      FTLCONF_dns_hosts: "${TAILNET_HOSTS}" 
+      FTLCONF_dns_hosts: "${TAILNET_HOSTS}"
       # Disable logging noise due to dnscrypt-proxy upstream
       # See here https://github.com/pi-hole/pi-hole/issues/6079
-      FTLCONF_misc_hide_connection_error: false 
+      FTLCONF_misc_hide_connection_error: false
     ports:
       # DNS Ports
       - "${LOCAL_IP}:53:53/tcp"
@@ -75,3 +75,4 @@ services:
       - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https?://[^/]+/?$$"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://pihole.${DOMAIN}/admin/"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
+      - "com.centurylinklabs.watchtower.enable=false"
