@@ -1,6 +1,7 @@
 services:
   portainer:
-    image: portainer/portainer-ce:sts
+    # Alpine needed here for healthcheck with wget to work
+    image: portainer/portainer-ce:alpine-sts
     container_name: portainer
     restart: unless-stopped
     env_file:
@@ -13,3 +14,5 @@ services:
       - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)"
       - "traefik.http.routers.portainer.entrypoints=web"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+    healthcheck:
+      test: "wget --no-verbose --tries=3 --spider http://localhost:9000/api/system/status || exit 1"
