@@ -34,7 +34,7 @@ services:
     secrets:
       - pihole_password
     environment:
-      FTLCONF_dns_upstreams: "1.1.1.1;1.0.0.1" # Cloudflare DNS
+      FTLCONF_dns_upstreams: "${LOCAL_IP}#5053" # Local dnscrypt-proxy service
       WEBPASSWORD_FILE: pihole_password
       # When using bridge networking, allow to respond to queries on local network
       FTLCONF_dns_listeningMode: "ALL"
@@ -42,11 +42,17 @@ services:
       FTLCONF_misc_dnsmasq_lines: "address=/${DOMAIN}/${TAILSCALE_IP}"
       FTLCONF_webserver_domain: 'pihole.${DOMAIN}'
       FTLCONF_webserver_session_timeout: 604800 # 1 week
-      FTLCONF_dns_hosts: "${TAILNET_HOSTS}"
+      # For displaying tailscale hostnames in the Pi-hole dashboard
+      FTLCONF_dns_hosts: "${TAILNET_HOSTS}" 
+      # Disable logging noise due to dnscrypt-proxy upstream
+      # See here https://github.com/pi-hole/pi-hole/issues/6079
+      FTLCONF_misc_hide_connection_error: false 
     ports:
       # DNS Ports
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "${LOCAL_IP}:53:53/tcp"
+      - "${LOCAL_IP}:53:53/udp"
+      - "${TAILSCALE_IP}:53:53/tcp"
+      - "${TAILSCALE_IP}:53:53/udp"
       # Uncomment the below if using Pi-hole as your DHCP Server
       #- "67:67/udp"
       # Uncomment the line below if you are using Pi-hole as your NTP server

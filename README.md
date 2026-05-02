@@ -193,13 +193,87 @@ sudo nmcli con up eth0
 >This is to ensure Pi has internet access event if Pi-hole is down. Containers that would benefit from routing their traffic through Pi-hole can set it as DNS in compose file
 - Edit `~/.ssh/config` on host machine
 ```
-Host server server.local 192.168.1.100
+Host server server.local 192.168.1.100 192.168.1.101
 	User daniel
 	IdentityFile ~/.ssh/id_rpi
 ```
 - Set Pi IP address as nameserver in Tailscale admin console -> DNS settings
 ```bash
 tailscale ip -4
+```
+
+## dnscrypt-proxy
+- Install [dnscrypt-proxy](https://github.com/DNSCrypt/dnscrypt-proxy)
+```bash
+sudo apt update
+sudo apt install dnscrypt-proxy
+```
+- Edit dnscrypt-proxy settings
+```bash
+sudo systemctl edit dnscrypt-proxy.socket
+```
+- Add the following lines to file
+```
+### Editing /etc/systemd/system/dnscrypt-proxy.socket.d/override.conf
+### Anything between here and the comment below will become the contents of the drop-in file
+
+[Socket]
+# Empty to reset config, not append to existing
+ListenStream=
+ListenDatagram=
+# For Pi's own networking
+ListenStream=127.0.0.1:53
+ListenDatagram=127.0.0.1:53
+# Docker host bridge 
+ListenStream=172.17.0.1:53
+ListenDatagram=172.17.0.1:53
+# Pi-hole upstream
+ListenStream=192.168.1.100:5053
+ListenDatagram=192.168.1.100:5053
+
+### Edits below this comment will be discarded
+```
+- Edit dnscrypt-proxy service settings
+```bash
+sudo systemctl edit dnscrypt-proxy.service
+```
+- Add the following lines to file
+```
+[Service]
+Restart=always
+RestartSec=10
+```
+- Add the following lines to `/etc/dnscrypt-proxy/dnscrypt-proxy.toml`
+```
+# Leave empty to use systemd socket activation:
+listen_addresses = []
+
+# Populate `server_names` with desired DoH/DNSCrypt upstream DNS servers listed in https://dnscrypt.info/public-servers/.
+server_names = [
+  'quad9-dnscrypt-ip4-filter-pri',   
+  'cs-pt',  
+  'dnscry.pt-lisbon-ipv4',  
+  'dnscry.pt-lisbon02-ipv4',  
+]
+```
+- Restart dnscrypt-proxy
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart dnscrypt-proxy.socket
+sudo systemctl restart dnscrypt-proxy.service
+```
+- Verify
+```bash
+sudo systemctl status dnscrypt-proxy.socket
+sudo systemctl status dnscrypt-proxy.service
+systemctl show dnscrypt-proxy.service -p Restart -p RestartSec -p RestartUSec 
+```
+- Configure Pi to use dnscrypt-proxy
+```bash
+sudo nmcli con mod eth0 ipv4.dns "127.0.0.1"
+sudo nmcli con mod wlan0 ipv4.dns "127.0.0.1"
+sudo nmcli con up wlan0
+sudo nmcli con up eth0
 ```
 
 ## Docker install
@@ -255,11 +329,12 @@ docker run hello-world # Should work without 'sudo'
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 ```
-- Create docker config to enable log rotation
+- Create docker config to enable log rotation and point container dns to dnscrypt-proxy
 ```bash
 sudo tee /etc/docker/daemon.json <<EOF
 {
-  "log-driver": "json-file",
+  "dns": ["172.17.0.1"],
+	"log-driver": "json-file",
   "log-opts": {
     "max-size": "10m",
     "max-file": "7"

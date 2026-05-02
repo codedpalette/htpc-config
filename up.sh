@@ -9,6 +9,11 @@ export ROOT_DIR
 DOMAIN="$(hostname -s)"
 export DOMAIN
 
+# Pi's IP on local network
+DEFAULT_INTERFACE="$(ip route show default | awk '/default/ {print $5; exit}')"
+LOCAL_IP="$(ip -4 addr show $DEFAULT_INTERFACE | awk '/inet / {print $2}' | cut -d/ -f1)"
+export LOCAL_IP
+
 # First IPv4 address from Tailscale
 TAILSCALE_IP="$(tailscale ip -4 | head -n1)"
 if [[ -z "$TAILSCALE_IP" ]]; then
@@ -23,6 +28,7 @@ export TAILNET_HOSTS
 
 echo "ROOT_DIR=$ROOT_DIR"
 echo "DOMAIN=$DOMAIN"
+echo "LOCAL_IP=$LOCAL_IP"
 echo "TAILSCALE_IP=$TAILSCALE_IP"
 echo "TAILNET_HOSTS=$TAILNET_HOSTS"
   
