@@ -44,6 +44,13 @@ argon-config
 systemctl status argon*
 ```
 
+## Memory cgroups 
+> This is needed to enable Docker per-container memory stats
+- Add the following lines to `/boot/firmware/cmdline.txt`
+```
+cgroup_enable=memory cgroup_memory=1 
+```
+
 ## SD card durability
 
 ### Mount HDD
@@ -216,6 +223,10 @@ sudo systemctl edit dnscrypt-proxy.socket
 ```
 ### Editing /etc/systemd/system/dnscrypt-proxy.socket.d/override.conf
 ### Anything between here and the comment below will become the contents of the drop-in file
+
+[Unit]
+After=docker.service
+Wants=docker.service
 
 [Socket]
 # Empty to reset config, not append to existing
