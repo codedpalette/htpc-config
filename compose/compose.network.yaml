@@ -44,9 +44,6 @@ services:
       FTLCONF_webserver_session_timeout: 604800 # 1 week
       # For displaying tailscale hostnames in the Pi-hole dashboard
       FTLCONF_dns_hosts: "${TAILNET_HOSTS}"
-      # Disable logging noise due to dnscrypt-proxy upstream
-      # See here https://github.com/pi-hole/pi-hole/issues/6079
-      FTLCONF_misc_hide_connection_error: false
     ports:
       # DNS Ports
       - "${LOCAL_IP}:53:53/tcp"

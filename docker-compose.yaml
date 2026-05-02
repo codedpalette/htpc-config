@@ -8,4 +8,5 @@ secrets:
 
 include:
   - compose/compose.network.yaml
+  - compose/compose.monitoring.yaml
   - compose/compose.util.yaml

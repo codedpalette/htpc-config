@@ -1,0 +1,15 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:sts
+    container_name: portainer
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${ROOT_DIR}/config/portainer:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)"
+      - "traefik.http.routers.portainer.entrypoints=web"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
