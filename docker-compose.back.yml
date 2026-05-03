@@ -45,18 +45,6 @@ services:
       - 8989:8989
     restart: unless-stopped
     logging: *common-log
-  radarr:
-    image: lscr.io/linuxserver/radarr
-    container_name: radarr
-    environment: *common-env
-    volumes:
-      - ${ROOT}/config/radarr:/config
-      - ${ROOT}/complete/movies:/movies
-      - ${ROOT}/downloads:/downloads
-    ports:
-      - 7878:7878
-    restart: unless-stopped
-    logging: *common-log
   bazarr:
     image: lscr.io/linuxserver/bazarr
     container_name: bazarr
@@ -98,7 +86,7 @@ services:
       - "32413:32413/udp"
       - "32414:32414/udp"
     restart: unless-stopped
-    logging: *common-log  
+    logging: *common-log
   organizr:
     image: ghcr.io/organizr/organizr
     container_name: organizr
@@ -109,4 +97,3 @@ services:
       - 80:80
     restart: always
     logging: *common-log
-  
