@@ -59,3 +59,46 @@ services:
       traefik:
         condition: service_healthy
         restart: true
+  byparr:
+    image: ghcr.io/thephaseless/byparr
+    container_name: byparr
+    restart: unless-stopped
+    init: true
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    healthcheck:
+      test: curl -f http://localhost:8191/health || exit 1
+      interval: 10m
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 15s
+  prowlarr:
+    image: ghcr.io/hotio/prowlarr
+    container_name: prowlarr
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - ${ROOT_DIR}/config/prowlarr:/config
+      - ${ROOT_DIR}/data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)"
+      - "traefik.http.routers.prowlarr.entrypoints=web"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+    healthcheck:
+      test: curl -f http://localhost:9696/ping || exit 1
+    depends_on:
+      traefik:
+        condition: service_healthy
+        restart: true
+      sonarr:
+        condition: service_healthy
+        restart: true
+      radarr:
+        condition: service_healthy
+        restart: true
+      byparr:
+        condition: service_healthy
+        restart: true
