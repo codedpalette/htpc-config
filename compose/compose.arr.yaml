@@ -39,3 +39,23 @@ services:
       traefik:
         condition: service_healthy
         restart: true
+  bazarr:
+    image: ghcr.io/hotio/bazarr
+    container_name: bazarr
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - ${ROOT_DIR}/config/bazarr:/config
+      - ${ROOT_DIR}/data/media:/data/media
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)"
+      - "traefik.http.routers.bazarr.entrypoints=web"
+      - "traefik.http.services.bazarr.loadbalancer.server.port=6767"
+    healthcheck:
+      test: curl -f http://localhost:6767/ping || exit 1
+    depends_on:
+      traefik:
+        condition: service_healthy
+        restart: true

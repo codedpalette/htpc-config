@@ -33,18 +33,6 @@ services:
       - 9117:9117
     restart: unless-stopped
     logging: *common-log
-  bazarr:
-    image: lscr.io/linuxserver/bazarr
-    container_name: bazarr
-    environment: *common-env
-    volumes:
-      - ${ROOT}/config/bazarr:/config
-      - ${ROOT}/complete/movies:/movies
-      - ${ROOT}/complete/tv:/tv
-    ports:
-      - 6767:6767
-    restart: unless-stopped
-    logging: *common-log
   plex:
     image: lscr.io/linuxserver/plex
     container_name: plex
