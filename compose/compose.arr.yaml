@@ -73,6 +73,21 @@ services:
       retries: 3
       start_period: 30s
       start_interval: 15s
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr
+    container_name: flaresolverr
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - ${ROOT_DIR}/config/flaresolverr:/config
+    healthcheck:
+      test: 'curl -fsS http://localhost:8191/health | grep -qi "\"status\": \"ok\""'
+      interval: 10m
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 15s
   prowlarr:
     image: ghcr.io/hotio/prowlarr
     container_name: prowlarr
@@ -100,5 +115,8 @@ services:
         condition: service_healthy
         restart: true
       byparr:
+        condition: service_healthy
+        restart: true
+      flaresolverr:
         condition: service_healthy
         restart: true
