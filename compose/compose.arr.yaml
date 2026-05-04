@@ -59,35 +59,43 @@ services:
       traefik:
         condition: service_healthy
         restart: true
-  byparr:
-    image: ghcr.io/thephaseless/byparr
-    container_name: byparr
-    restart: unless-stopped
-    init: true
-    env_file:
-      - ${ROOT_DIR}/env/shared.env
-    healthcheck:
-      test: curl -f http://localhost:8191/health || exit 1
-      interval: 10m
-      timeout: 30s
-      retries: 3
-      start_period: 30s
-      start_interval: 15s
-  flaresolverr:
-    image: ghcr.io/flaresolverr/flaresolverr
-    container_name: flaresolverr
-    restart: unless-stopped
-    env_file:
-      - ${ROOT_DIR}/env/shared.env
-    volumes:
-      - ${ROOT_DIR}/config/flaresolverr:/config
-    healthcheck:
-      test: 'curl -fsS http://localhost:8191/health | grep -qi "\"status\": \"ok\""'
-      interval: 10m
-      timeout: 30s
-      retries: 3
-      start_period: 30s
-      start_interval: 15s
+  # byparr:
+  #   image: ghcr.io/thephaseless/byparr
+  #   container_name: byparr
+  #   restart: unless-stopped
+  #   init: true
+  #   env_file:
+  #     - ${ROOT_DIR}/env/shared.env
+  #   healthcheck:
+  #     test: curl -f http://localhost:8191/health || exit 1
+  #     interval: 10m
+  #     timeout: 30s
+  #     retries: 3
+  #     start_period: 30s
+  #     start_interval: 15s
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 256M
+  # flaresolverr:
+  #   image: ghcr.io/flaresolverr/flaresolverr
+  #   container_name: flaresolverr
+  #   restart: unless-stopped
+  #   env_file:
+  #     - ${ROOT_DIR}/env/shared.env
+  #   volumes:
+  #     - ${ROOT_DIR}/config/flaresolverr:/config
+  #   healthcheck:
+  #     test: 'curl -fsS http://localhost:8191/health | grep -qi "\"status\": \"ok\""'
+  #     interval: 10m
+  #     timeout: 30s
+  #     retries: 3
+  #     start_period: 30s
+  #     start_interval: 15s
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 256M
   prowlarr:
     image: ghcr.io/hotio/prowlarr
     container_name: prowlarr
@@ -114,9 +122,32 @@ services:
       radarr:
         condition: service_healthy
         restart: true
-      byparr:
+      # byparr:
+      #   condition: service_healthy
+      #   restart: true
+      # flaresolverr:
+      #   condition: service_healthy
+      #   restart: true
+  clonarr:
+    image: ghcr.io/prophetse7en/clonarr
+    container_name: clonarr
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - ${ROOT_DIR}/config/clonarr:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.clonarr.rule=Host(`clonarr.${DOMAIN}`)"
+      - "traefik.http.routers.clonarr.entrypoints=web"
+      - "traefik.http.services.clonarr.loadbalancer.server.port=6060"
+    depends_on:
+      traefik:
         condition: service_healthy
         restart: true
-      flaresolverr:
+      sonarr:
+        condition: service_healthy
+        restart: true
+      radarr:
         condition: service_healthy
         restart: true
