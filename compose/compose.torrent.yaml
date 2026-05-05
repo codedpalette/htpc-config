@@ -13,8 +13,13 @@ services:
       - "traefik.http.routers.bittorrent.rule=Host(`torrent.${DOMAIN}`)"
       - "traefik.http.routers.bittorrent.entrypoints=web"
       - "traefik.http.services.bittorrent.loadbalancer.server.port=8080"
+      - "homepage.group=Arr"
+      - "homepage.name=qBittorrent"
+      - "homepage.icon=qbittorrent.png"
+      - "homepage.href=http://torrent.${DOMAIN}/"
+      - "homepage.description=BitTorrent client"
     healthcheck:
-      test: curl -f http://localhost:8080 || exit 1
+      test: curl -f http://localhost:8080
     depends_on:
       traefik:
         condition: service_healthy

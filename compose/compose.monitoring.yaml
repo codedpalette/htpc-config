@@ -14,8 +14,13 @@ services:
       - "traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)"
       - "traefik.http.routers.portainer.entrypoints=web"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Portainer"
+      - "homepage.icon=portainer.png"
+      - "homepage.href=http://portainer.${DOMAIN}/"
+      - "homepage.description=Container management interface"
     healthcheck:
-      test: "wget --no-verbose --tries=3 --spider http://localhost:9000/api/system/status || exit 1"
+      test: "wget --no-verbose --tries=3 --spider http://localhost:9000/api/system/status"
   glances:
     # https://github.com/nicolargo/glances/blob/master/docker-compose/docker-compose.yml
     image: nicolargo/glances:latest-full
@@ -39,6 +44,11 @@ services:
       - "traefik.http.routers.glances.rule=Host(`glances.${DOMAIN}`)"
       - "traefik.http.routers.glances.entrypoints=web"
       - "traefik.http.services.glances.loadbalancer.server.port=61208"
+      - "homepage.group=Monitoring"
+      - "homepage.name=Glances"
+      - "homepage.icon=glances.png"
+      - "homepage.href=http://glances.${DOMAIN}/"
+      - "homepage.description=System monitoring tool"
     healthcheck:
       test: "curl -f http://localhost:61208/api/4/status"
   homepage:
@@ -51,7 +61,7 @@ services:
       HOMEPAGE_ALLOWED_HOSTS: "home.${DOMAIN}"
     volumes:
       - ${ROOT_DIR}/config/homepage:/app/config
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${ROOT_DIR}/config/homepage/icons:/app/public/icons
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.homepage.rule=Host(`home.${DOMAIN}`)"
