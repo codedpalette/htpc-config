@@ -1,3 +1,5 @@
 data
 secrets
-config
+config/*
+!config/homepage/
+config/homepage/logs

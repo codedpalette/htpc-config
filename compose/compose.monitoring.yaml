@@ -41,3 +41,26 @@ services:
       - "traefik.http.services.glances.loadbalancer.server.port=61208"
     healthcheck:
       test: "curl -f http://localhost:61208/api/4/status"
+  homepage:
+    image: ghcr.io/gethomepage/homepage
+    container_name: homepage
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: "home.${DOMAIN}"
+    volumes:
+      - ${ROOT_DIR}/config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`home.${DOMAIN}`)"
+      - "traefik.http.routers.homepage.entrypoints=web"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+    depends_on:
+      traefik:
+        condition: service_healthy
+        restart: true
+      dockerproxy:
+        condition: service_healthy
+        restart: true
