@@ -1,0 +1,22 @@
+services:
+  bittorrent:
+    image: ghcr.io/hotio/qbittorrent
+    container_name: bittorrent
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+      - ${ROOT_DIR}/env/bittorrent.env
+    volumes:
+      - ${ROOT_DIR}/config/bittorrent:/config
+      - ${ROOT_DIR}/data/torrents:/data/torrents
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bittorrent.rule=Host(`torrent.${DOMAIN}`)"
+      - "traefik.http.routers.bittorrent.entrypoints=web"
+      - "traefik.http.services.bittorrent.loadbalancer.server.port=8088"
+    healthcheck:
+      test: curl -f http://localhost:8088 || exit 1
+    depends_on:
+      traefik:
+        condition: service_healthy
+        restart: true

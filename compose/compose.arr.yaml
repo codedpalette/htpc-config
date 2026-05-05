@@ -19,6 +19,9 @@ services:
       traefik:
         condition: service_healthy
         restart: true
+      bittorrent:
+        condition: service_healthy
+        restart: true
   sonarr:
     image: ghcr.io/hotio/sonarr
     container_name: sonarr
@@ -37,6 +40,9 @@ services:
       test: curl -f http://localhost:8989/ping || exit 1
     depends_on:
       traefik:
+        condition: service_healthy
+        restart: true
+      bittorrent:
         condition: service_healthy
         restart: true
   bazarr:
@@ -96,6 +102,9 @@ services:
         condition: service_healthy
         restart: true
       flaresolverr:
+        condition: service_healthy
+        restart: true
+      bittorrent:
         condition: service_healthy
         restart: true
   clonarr:

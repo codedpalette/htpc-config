@@ -10,4 +10,5 @@ include:
   - compose/compose.network.yaml
   - compose/compose.monitoring.yaml
   - compose/compose.arr.yaml
+  - compose/compose.torrent.yaml
   - compose/compose.util.yaml
