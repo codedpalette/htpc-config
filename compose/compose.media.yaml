@@ -1,0 +1,23 @@
+services:
+  jellyfin:
+    image: ghcr.io/hotio/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    environment:
+      JELLYFIN_PublishedServerUrl: http://media.${DOMAIN}
+    volumes:
+      - ${ROOT_DIR}/config/jellyfin:/config
+      - ${ROOT_DIR}/data/media:/data/media
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin.rule=Host(`media.${DOMAIN}`)"
+      - "traefik.http.routers.jellyfin.entrypoints=web"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+    healthcheck:
+      test: curl -f http://localhost:8096/health || exit 1
+    depends_on:
+      traefik:
+        condition: service_healthy
+        restart: true
