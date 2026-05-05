@@ -345,7 +345,7 @@ sudo systemctl enable containerd.service
 sudo tee /etc/docker/daemon.json <<EOF
 {
   "dns": ["172.17.0.1"],
-	"log-driver": "json-file",
+  "log-driver": "json-file",
   "log-opts": {
     "max-size": "10m",
     "max-file": "7"
