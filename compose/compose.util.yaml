@@ -18,3 +18,16 @@ services:
       - ${ROOT_DIR}/env/watchtower.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  dockerproxy:
+    image: ghcr.io/tecnativa/docker-socket-proxy
+    container_name: dockerproxy
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+      - ${ROOT_DIR}/env/docker-proxy.env
+    ports:
+      - 127.0.0.1:2375:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Mounted as read-only
+    healthcheck:
+      test: "nc -z 127.0.0.1 2375"
