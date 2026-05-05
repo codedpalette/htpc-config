@@ -21,3 +21,18 @@ services:
       traefik:
         condition: service_healthy
         restart: true
+  seerr:
+    image: ghcr.io/seerr-team/seerr
+    container_name: seerr
+    restart: unless-stopped
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+    volumes:
+      - ${ROOT_DIR}/config/seerr:/app/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.seerr.rule=Host(`seerr.${DOMAIN}`)"
+      - "traefik.http.routers.seerr.entrypoints=web"
+      - "traefik.http.services.seerr.loadbalancer.server.port=5055"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
