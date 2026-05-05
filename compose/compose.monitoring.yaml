@@ -3,7 +3,7 @@ services:
     # Alpine needed here for healthcheck with wget to work
     image: portainer/portainer-ce:alpine-sts
     container_name: portainer
-    restart: unless-stopped
+    restart: always
     env_file:
       - ${ROOT_DIR}/env/shared.env
     volumes:
@@ -16,3 +16,28 @@ services:
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     healthcheck:
       test: "wget --no-verbose --tries=3 --spider http://localhost:9000/api/system/status || exit 1"
+  glances:
+    # https://github.com/nicolargo/glances/blob/master/docker-compose/docker-compose.yml
+    image: nicolargo/glances:latest-full
+    container_name: glances
+    restart: always
+    pid: host
+    read_only: true
+    privileged: false
+    env_file:
+      - ${ROOT_DIR}/env/shared.env
+      - ${ROOT_DIR}/env/glances.env
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${ROOT_DIR}/config/glances:/glances/conf
+      - /etc/os-release:/etc/os-release:ro
+    tmpfs:
+      - /tmp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glances.rule=Host(`glances.${DOMAIN}`)"
+      - "traefik.http.routers.glances.entrypoints=web"
+      - "traefik.http.services.glances.loadbalancer.server.port=61208"
+    healthcheck:
+      test: "curl -f http://localhost:61208/api/4/status"
