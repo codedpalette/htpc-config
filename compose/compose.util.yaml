@@ -2,7 +2,7 @@ services:
   autoheal:
     image: willfarrell/autoheal
     container_name: autoheal
-    restart: unless-stopped
+    restart: always
     network_mode: none
     env_file:
       - ${ROOT_DIR}/env/shared.env
@@ -12,7 +12,7 @@ services:
   watchtower:
     image: nickfedor/watchtower
     container_name: watchtower
-    restart: unless-stopped
+    restart: always
     env_file:
       - ${ROOT_DIR}/env/shared.env
       - ${ROOT_DIR}/env/watchtower.env

@@ -2,7 +2,7 @@ services:
   traefik:
     image: traefik:v3
     container_name: traefik
-    restart: unless-stopped
+    restart: always
     env_file:
       - ${ROOT_DIR}/env/shared.env
     command:
@@ -28,7 +28,7 @@ services:
     image: pihole/pihole
     container_name: pihole
     hostname: server # For display in UI
-    restart: unless-stopped
+    restart: always
     env_file:
       - ${ROOT_DIR}/env/shared.env
     secrets:
