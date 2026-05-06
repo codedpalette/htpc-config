@@ -16,7 +16,7 @@ services:
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "homepage.group=Monitoring"
       - "homepage.name=Portainer"
-      - "homepage.icon=portainer.png"
+      - "homepage.icon=portainer-alt.png"
       - "homepage.href=http://portainer.${DOMAIN}/"
       - "homepage.description=Container management interface"
     healthcheck:
