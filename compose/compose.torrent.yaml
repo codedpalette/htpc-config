@@ -18,6 +18,7 @@ services:
       - "homepage.icon=qbittorrent.png"
       - "homepage.href=http://torrent.${DOMAIN}/"
       - "homepage.description=BitTorrent client"
+      - "homepage.weight=4"
     healthcheck:
       test: curl -f http://localhost:8080
     depends_on:

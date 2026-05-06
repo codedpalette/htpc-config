@@ -18,6 +18,7 @@ services:
       - "homepage.icon=radarr.png"
       - "homepage.href=http://radarr.${DOMAIN}/"
       - "homepage.description=Movies downloader and manager"
+      - "homepage.weight=2"
     healthcheck:
       test: curl -f http://localhost:7878/ping
     depends_on:
@@ -46,6 +47,7 @@ services:
       - "homepage.icon=sonarr.png"
       - "homepage.href=http://sonarr.${DOMAIN}/"
       - "homepage.description=TV shows downloader and manager"
+      - "homepage.weight=1"
     healthcheck:
       test: curl -f http://localhost:8989/ping
     depends_on:
@@ -74,6 +76,7 @@ services:
       - "homepage.icon=bazarr.png"
       - "homepage.href=http://bazarr.${DOMAIN}/"
       - "homepage.description=Subtitles downloader and manager"
+      - "homepage.weight=5"
     healthcheck:
       test: curl -f http://localhost:6767/ping
     depends_on:
@@ -109,6 +112,7 @@ services:
       - "homepage.icon=prowlarr.png"
       - "homepage.href=http://prowlarr.${DOMAIN}/"
       - "homepage.description=Usenet/Bittorrent indexer manager and searcher"
+      - "homepage.weight=3"
     healthcheck:
       test: curl -f http://localhost:9696/ping
     depends_on:
@@ -145,6 +149,7 @@ services:
       - "homepage.icon=/icons/clonarr.png"
       - "homepage.href=http://clonarr.${DOMAIN}/"
       - "homepage.description=A fully visual TRaSH Guides sync tool for Radarr and Sonarr"
+      - "homepage.weight=6"
     depends_on:
       traefik:
         condition: service_healthy
