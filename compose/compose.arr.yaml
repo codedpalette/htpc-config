@@ -22,6 +22,7 @@ services:
       - "homepage.widget.type=radarr"
       - "homepage.widget.url=http://radarr:7878"
       - "homepage.widget.key={{HOMEPAGE_FILE_RADARR_KEY}}"
+      - "homepage.widget.enableQueue=true"
     healthcheck:
       test: curl -f http://localhost:7878/ping
     depends_on:
@@ -54,6 +55,7 @@ services:
       - "homepage.widget.type=sonarr"
       - "homepage.widget.url=http://sonarr:8989"
       - "homepage.widget.key={{HOMEPAGE_FILE_SONARR_KEY}}"
+      - "homepage.widget.enableQueue=true"
     healthcheck:
       test: curl -f http://localhost:8989/ping
     depends_on:
