@@ -13,6 +13,10 @@ secrets:
     file: ${ROOT_DIR}/secrets/prowlarr_api_key.txt
   bazarr_api_key:
     file: ${ROOT_DIR}/secrets/bazarr_api_key.txt
+  jellyfin_api_key:
+    file: ${ROOT_DIR}/secrets/jellyfin_api_key.txt
+  seerr_api_key:
+    file: ${ROOT_DIR}/secrets/seerr_api_key.txt
 
 include:
   - compose/compose.network.yaml

@@ -63,6 +63,8 @@ services:
       - prowlarr_api_key
       - bazarr_api_key
       - pihole_password
+      - jellyfin_api_key
+      - seerr_api_key
     environment:
       HOMEPAGE_ALLOWED_HOSTS: "home.${DOMAIN}"
       HOMEPAGE_VAR_DOMAIN: ${DOMAIN} # For use in configuration files
@@ -71,6 +73,8 @@ services:
       HOMEPAGE_FILE_PROWLARR_KEY: /run/secrets/prowlarr_api_key
       HOMEPAGE_FILE_BAZARR_KEY: /run/secrets/bazarr_api_key
       HOMEPAGE_FILE_PIHOLE_PASSWORD: /run/secrets/pihole_password
+      HOMEPAGE_FILE_JELLYFIN_KEY: /run/secrets/jellyfin_api_key
+      HOMEPAGE_FILE_SEERR_KEY: /run/secrets/seerr_api_key
     volumes:
       - ${ROOT_DIR}/config/homepage:/app/config
       - ${ROOT_DIR}/config/homepage/icons:/app/public/icons
