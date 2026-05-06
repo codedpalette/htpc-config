@@ -2,11 +2,29 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/info-widgets/
 
-- resources:
-    cpu: true
-    memory: true
-    disk: /
 
-# - search:
-#     provider: duckduckgo
-#     target: _blank
+- datetime:
+    text_size: xl
+    format:
+        timeStyle: medium
+        dateStyle: medium
+        hour12: false
+- openmeteo:    
+    label: Lisbon # optional
+    latitude: 38.676525 
+    longitude: -9.165105
+    timezone: Europe/Lisbon # optional
+    units: metric # or imperial
+    cache: 5 # Time in minutes to cache API responses, to stay within limits
+    format: # optional, Intl.NumberFormat options
+      maximumFractionDigits: 1
+- glances:
+    url: http://glances:61208
+    href: http://glances.{{HOMEPAGE_VAR_DOMAIN}}/    
+    version: 4 # required only if running glances v4 or higher, defaults to 3
+    cpu: true # optional, enabled by default, disable by setting to false
+    mem: true # optional, enabled by default, disable by setting to false
+    cputemp: true # disabled by default    
+    uptime: true # disabled by default
+    disk: /rootfs/mnt/hdd # disabled by default, use mount point of disk(s) in glances. Can also be a list
+    expanded: true # show the expanded view    

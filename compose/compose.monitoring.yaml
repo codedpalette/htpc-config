@@ -59,6 +59,7 @@ services:
       - ${ROOT_DIR}/env/shared.env
     environment:
       HOMEPAGE_ALLOWED_HOSTS: "home.${DOMAIN}"
+      HOMEPAGE_VAR_DOMAIN: ${DOMAIN} # For use in configuration files
     volumes:
       - ${ROOT_DIR}/config/homepage:/app/config
       - ${ROOT_DIR}/config/homepage/icons:/app/public/icons
