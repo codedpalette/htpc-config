@@ -5,6 +5,14 @@ networks:
 secrets:
   pihole_password:
     file: ${ROOT_DIR}/secrets/pihole_password.txt
+  sonarr_api_key:
+    file: ${ROOT_DIR}/secrets/sonarr_api_key.txt
+  radarr_api_key:
+    file: ${ROOT_DIR}/secrets/radarr_api_key.txt
+  prowlarr_api_key:
+    file: ${ROOT_DIR}/secrets/prowlarr_api_key.txt
+  bazarr_api_key:
+    file: ${ROOT_DIR}/secrets/bazarr_api_key.txt
 
 include:
   - compose/compose.network.yaml

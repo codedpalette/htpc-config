@@ -19,6 +19,10 @@ services:
       - "homepage.href=http://torrent.${DOMAIN}/"
       - "homepage.description=BitTorrent client"
       - "homepage.weight=4"
+      - "homepage.widget.type=qbittorrent"
+      - "homepage.widget.url=http://bittorrent:8080"
+      - "homepage.widget.enableLeechProgress=true"
+      - "homepage.widget.enableLeechSize=true"
     healthcheck:
       test: curl -f http://localhost:8080
     depends_on:

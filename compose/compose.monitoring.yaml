@@ -57,9 +57,20 @@ services:
     restart: unless-stopped
     env_file:
       - ${ROOT_DIR}/env/shared.env
+    secrets:
+      - sonarr_api_key
+      - radarr_api_key
+      - prowlarr_api_key
+      - bazarr_api_key
+      - pihole_password
     environment:
       HOMEPAGE_ALLOWED_HOSTS: "home.${DOMAIN}"
       HOMEPAGE_VAR_DOMAIN: ${DOMAIN} # For use in configuration files
+      HOMEPAGE_FILE_SONARR_KEY: /run/secrets/sonarr_api_key
+      HOMEPAGE_FILE_RADARR_KEY: /run/secrets/radarr_api_key
+      HOMEPAGE_FILE_PROWLARR_KEY: /run/secrets/prowlarr_api_key
+      HOMEPAGE_FILE_BAZARR_KEY: /run/secrets/bazarr_api_key
+      HOMEPAGE_FILE_PIHOLE_PASSWORD: /run/secrets/pihole_password
     volumes:
       - ${ROOT_DIR}/config/homepage:/app/config
       - ${ROOT_DIR}/config/homepage/icons:/app/public/icons

@@ -7,6 +7,7 @@ services:
       - ${ROOT_DIR}/env/shared.env
     command:
       - --api.dashboard=true
+      - --api.insecure=true # exposes dashboard/API on :8080 (docker network only)
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
@@ -20,12 +21,15 @@ services:
       - "traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.dashboard.entrypoints=web"
       - "traefik.http.routers.dashboard.service=api@internal"
+      # needed here only so that traefik wouldn't complain about missing router
       - "traefik.http.services.traefik.loadbalancer.server.port=80"
       - "homepage.group=Web"
       - "homepage.name=Traefik"
       - "homepage.icon=traefik.png"
       - "homepage.href=http://traefik.${DOMAIN}/"
       - "homepage.description=HTTP reverse proxy and load balancer dashboard"
+      - "homepage.widget.type=traefik"
+      - "homepage.widget.url=http://traefik:8080"
     healthcheck:
       test: [ "CMD", "traefik", "healthcheck", "--ping" ]
   pihole:
@@ -76,7 +80,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"
       - "traefik.http.routers.pihole.entrypoints=web"
-      - "traefik.http.routers.pihole.middlewares=pihole-redirect"
+      # - "traefik.http.routers.pihole.middlewares=pihole-redirect"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.regex=^https?://[^/]+/?$$"
       - "traefik.http.middlewares.pihole-redirect.redirectregex.replacement=http://pihole.${DOMAIN}/admin/"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
@@ -86,3 +90,7 @@ services:
       - "homepage.icon=pi-hole.png"
       - "homepage.href=http://pihole.${DOMAIN}/"
       - "homepage.description=DNS sinkhole for ad blocking"
+      - "homepage.widget.type=pihole"
+      - "homepage.widget.url=http://172.18.0.8"
+      - "homepage.widget.version=6"
+      - "homepage.widget.key={{HOMEPAGE_FILE_PIHOLE_PASSWORD}}"
