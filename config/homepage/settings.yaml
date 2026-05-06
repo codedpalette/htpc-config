@@ -5,7 +5,28 @@
 providers:
   openweathermap: openweathermapapikey
   weatherapi: weatherapiapikey
-background: 
-  image: https://images.unsplash.com/photo-1721733258410-35e699661ad6?q=80&w=1740&auto=format&fit=crop
-  blur: md
-  saturate: 50
+background:   
+  image: https://images.unsplash.com/photo-1673280032614-01ac52a74262?q=80&w=2070&auto=format&fit=crop
+  opacity: 50
+cardBlur: md
+layout:
+  - Media:
+      icon: mdi-folder-play-outline
+      style: row
+      columns: 2
+  - Arr:
+      icon: mdi-cloud-download-outline
+      style: row
+      columns: 2
+  - Web:
+      icon: mdi-web
+      style: row
+      columns: 2
+  - Monitoring:
+      icon: mdi-eye-outline
+      style: row
+      columns: 2
+iconStyle: theme
+useEqualHeights: true
+headerStyle: boxed
+# showStats: true
