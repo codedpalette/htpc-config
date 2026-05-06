@@ -10,10 +10,12 @@ background:
   opacity: 50
 cardBlur: md
 layout:
+  - Calendar:
+      header: false
   - Media:
       icon: mdi-folder-play-outline
       style: row
-      columns: 2
+      columns: 2      
   - Arr:
       icon: mdi-cloud-download-outline
       style: row
@@ -29,4 +31,4 @@ layout:
 iconStyle: theme
 useEqualHeights: true
 headerStyle: boxed
-# showStats: true
+disableCollapse: true

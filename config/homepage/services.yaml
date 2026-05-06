@@ -16,3 +16,23 @@
 #     - My Third Service:
 #         href: http://localhost/
 #         description: Homepage is 😎
+
+- Calendar:
+  - "":      
+      widget:
+        type: calendar        
+        view: monthly        
+        showTime: true        
+        integrations: 
+          - type: sonarr 
+            service_group: Arr
+            service_name: Sonarr
+            baseUrl: http://sonarr.{{HOMEPAGE_VAR_DOMAIN}}
+            params:
+              unmonitored: true
+          - type: radarr
+            service_group: Arr
+            service_name: Radarr
+            baseUrl: http://radarr.{{HOMEPAGE_VAR_DOMAIN}}
+            params:
+              unmonitored: true
