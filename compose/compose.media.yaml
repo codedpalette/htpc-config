@@ -30,9 +30,11 @@ services:
       - "homepage.widget.expandOneStreamToTwoRows=false"
     healthcheck:
       test: curl -f http://localhost:8096/health
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
   seerr:
     image: ghcr.io/seerr-team/seerr
@@ -58,3 +60,5 @@ services:
       - "homepage.widget.fields=[\"pending\", \"approved\", \"completed\", \"issues\"]"
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}

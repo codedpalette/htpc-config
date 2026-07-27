@@ -32,6 +32,8 @@ services:
       - "homepage.widget.url=http://traefik:8080"
     healthcheck:
       test: [ "CMD", "traefik", "healthcheck", "--ping" ]
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
   pihole:
     # https://docs.pi-hole.net/docker/
     image: pihole/pihole
@@ -76,6 +78,9 @@ services:
       #- SYS_TIME
       # Optional, if Pi-hole should get some more processing time
       - SYS_NICE
+    healthcheck: # `test` comes from the image's own HEALTHCHECK
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)"

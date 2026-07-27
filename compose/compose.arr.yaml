@@ -25,12 +25,14 @@ services:
       - "homepage.widget.enableQueue=true"
     healthcheck:
       test: curl -f http://localhost:7878/ping
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
       bittorrent:
-        condition: service_healthy
+        condition: service_started
         restart: true
   sonarr:
     image: ghcr.io/hotio/sonarr
@@ -58,12 +60,14 @@ services:
       - "homepage.widget.enableQueue=true"
     healthcheck:
       test: curl -f http://localhost:8989/ping
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
       bittorrent:
-        condition: service_healthy
+        condition: service_started
         restart: true
   bazarr:
     image: ghcr.io/hotio/bazarr
@@ -90,9 +94,11 @@ services:
       - "homepage.widget.key={{HOMEPAGE_FILE_BAZARR_KEY}}"
     healthcheck:
       test: curl -f http://localhost:6767/ping
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr
@@ -104,6 +110,8 @@ services:
       - ${ROOT_DIR}/config/flaresolverr:/config
     healthcheck:
       test: 'curl -fsS http://localhost:8191/health | grep -qi "\"status\": \"ok\""'
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
   prowlarr:
     image: ghcr.io/hotio/prowlarr
     container_name: prowlarr
@@ -129,21 +137,23 @@ services:
       - "homepage.widget.key={{HOMEPAGE_FILE_PROWLARR_KEY}}"
     healthcheck:
       test: curl -f http://localhost:9696/ping
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
       sonarr:
-        condition: service_healthy
+        condition: service_started
         restart: true
       radarr:
-        condition: service_healthy
+        condition: service_started
         restart: true
       flaresolverr:
-        condition: service_healthy
+        condition: service_started
         restart: true
       bittorrent:
-        condition: service_healthy
+        condition: service_started
         restart: true
   clonarr:
     image: ghcr.io/prophetse7en/clonarr
@@ -165,13 +175,16 @@ services:
       - "homepage.description=A fully visual TRaSH Guides sync tool for Radarr and Sonarr"
       - "homepage.weight=6"
       - "homepage.showStats=true"
+    healthcheck: # `test` comes from the image's own HEALTHCHECK
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
       sonarr:
-        condition: service_healthy
+        condition: service_started
         restart: true
       radarr:
-        condition: service_healthy
+        condition: service_started
         restart: true

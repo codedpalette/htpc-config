@@ -25,7 +25,9 @@ services:
       - "homepage.widget.enableLeechSize=true"
     healthcheck:
       test: curl -f http://localhost:8080
+      start_period: ${START_PERIOD}
+      start_interval: ${START_INTERVAL}
     depends_on:
       traefik:
-        condition: service_healthy
+        condition: service_started
         restart: true
